@@ -1,0 +1,28 @@
+import tp1.*
+
+describe "Atenciones en el Spa" {
+	test "Cuando Olivia se atiende en el spa, se relaja por los masajes y baños de vapor" {
+		spa.atender(olivia)
+		assert.equals(4 + 1 + 3 + 3, olivia.relax())
+	}
+	test "Cuando Adriano se atiende en el spa estando poco contracturado, queda sin contracturas" {
+		adriano.contracturas(2)
+		spa.atender(adriano)
+		assert.equals(0, adriano.contracturas())
+	}
+	test "Cuando Adriano se atiende en el spa y está contracturado pero no lastimado, se descontractura un poco por los masajes" {
+		adriano.contracturas(7)
+		spa.atender(adriano)
+		assert.equals(7 - 5, adriano.contracturas())
+	}
+	test "Cuando Adriano se atiende en el spa y está lastimado, se descontractura por los masajes y baños de vapor" {
+		adriano.contracturas(20)
+		spa.atender(adriano)
+		assert.equals(20 - 2 - 5 - 2, adriano.contracturas())
+	}
+	test "Si Adriano deja de estar lastimado durante la atención en el spa, el segundo baño de vapor no le hace nada" {
+		adriano.contracturas(15)
+		spa.atender(adriano)
+		assert.equals(15 - 2 - 5, adriano.contracturas())
+	}
+}

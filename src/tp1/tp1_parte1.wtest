@@ -1,0 +1,33 @@
+import tp1.*
+
+describe "Control de Malezas"{
+	test "Cuando crece aumentan las malezas" {
+		jardin.malezas(10)
+		jardin.crecerMalezas()
+		assert.equals(15, jardin.malezas())
+	}
+	test "Cuando tiene muchas malezas está desprolijo" {
+		jardin.malezas(21)
+		assert.that(jardin.desprolijo())
+	}
+	test "Cuando tiene pocas malezas no está desprolijo" {
+		jardin.malezas(20)
+		assert.notThat(jardin.desprolijo())
+	}
+	
+	test "Al emprolijarlo con un nivel de prolijidad alto, queda sin malezas" {
+		// TODO cambiar el assert fail que hace fallar el test por una definición adecuada para probar esta funcionalidad,
+		// agregando lo necesario en el archivo tp1.wlk para cumplir con lo pedido
+		assert.fail("Falta implementar")
+	}
+	test "Al emprolijarlo con un nivel de prolijidad intermedio, las malezas bajan a la mitad" {
+		// TODO cambiar el assert fail que hace fallar el test por una definición adecuada para probar esta funcionalidad,
+		// agregando lo necesario en el archivo tp1.wlk para cumplir con lo pedido
+		assert.fail("Falta implementar")
+	}
+	test "Al emprolijarlo con un nivel de prolijidad bajo, no se reducen las malezas" {
+		// TODO cambiar el assert fail que hace fallar el test por una definición adecuada para probar esta funcionalidad,
+		// agregando lo necesario en el archivo tp1.wlk para cumplir con lo pedido
+		assert.fail("Falta implementar")
+	}
+}

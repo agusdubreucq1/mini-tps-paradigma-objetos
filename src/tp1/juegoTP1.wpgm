@@ -1,0 +1,5 @@
+import configuracionJuegoTP1.*
+
+program juegoTP1 {
+	juegoTP1.jugar()
+}

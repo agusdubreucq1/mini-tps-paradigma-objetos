@@ -1,0 +1,32 @@
+import tp1.*
+
+describe "Olivia y el Jardín" {
+	test "Olivia inicialmente tiene 4 de relax" {
+		assert.equals(4, olivia.relax())
+	}
+	
+	test "Luego de trabajar en un jardín prolijo, el nivel de relax de Olivia baja en 1" {
+		jardin.malezas(10)
+		olivia.trabajarEnJardin(jardin)
+		assert.equals(4 - 1, olivia.relax())
+	}
+	test "Luego de trabajar en un jardín desprolijo, el nivel de relax de Olivia baja en 3" {
+		jardin.malezas(30)
+		olivia.trabajarEnJardin(jardin)
+		assert.equals(4 - 3, olivia.relax())
+	}
+	test "Cuando Olivia trabaja en un jardín prolijo, lo emprolija en relación a su nivel de relax" {
+		jardin.malezas(10)
+		olivia.relax(5)
+		
+		olivia.trabajarEnJardin(jardin)
+		assert.equals(0, jardin.malezas())
+	}
+	test "Cuando Olivia trabaja en un jardín desprolijo, lo emprolija luego de estresarse un poco" {
+		jardin.malezas(30)
+		olivia.relax(5)
+		
+		olivia.trabajarEnJardin(jardin)
+		assert.equals(30 / 2, jardin.malezas())
+	}
+} 

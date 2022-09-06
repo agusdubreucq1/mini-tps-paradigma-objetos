@@ -1,0 +1,31 @@
+import tp1.*
+
+describe "Adriano y el Jardín" {
+	test "Adriano inicialmente no está contracturado" {
+		assert.equals(0, adriano.contracturas())
+	}
+	test "Luego de trabajar en un jardín con pocas malezas, Adriano se contractura en relación a las malezas que tenía el jardín al empezar a trabajar" {
+		jardin.malezas(3)
+		adriano.contracturas(2)
+		adriano.trabajarEnJardin(jardin)
+		assert.equals(5, adriano.contracturas())
+	}
+	test "Lo máximo que Adriano se contractura trabajando es 7" {
+		jardin.malezas(10)
+		adriano.contracturas(2)
+		adriano.trabajarEnJardin(jardin)
+		assert.equals(9, adriano.contracturas())
+	}
+	test "Cuando Adriano trabaja en un jardín, lo emprolija con un nivel de prolijidad de 5 si no está lastimado al iniciar el trabajo" {
+		jardin.malezas(10)
+		adriano.contracturas(2)
+		adriano.trabajarEnJardin(jardin)
+		assert.equals(10 / 2, jardin.malezas())
+	}
+	test "Cuando Adriano trabaja en un jardín, lo emprolija con un nivel de prolijidad de 1 si está lastimado al iniciar el trabajo" {
+		jardin.malezas(10)
+		adriano.contracturas(12)
+		adriano.trabajarEnJardin(jardin)
+		assert.equals(10, jardin.malezas())
+	}
+} 

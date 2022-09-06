@@ -1,8 +1,8 @@
 # Mini TPs - Paradigma Orientado a Objetos 2021
 
-Nombre y Apellido: ***...COMPLETAR...***
+Nombre y Apellido: agustin dubreucq
 
-**Reemplazá este texto por el Badge de GitHub Actions como se explica en el TP0**
+[![build](https://github.com/pdep-mit/mini-tps-objetos-2022-agusdubreucq1/actions/workflows/build.yml/badge.svg)](https://github.com/pdep-mit/mini-tps-objetos-2022-agusdubreucq1/actions/workflows/build.yml)
 
 ## Consignas
 

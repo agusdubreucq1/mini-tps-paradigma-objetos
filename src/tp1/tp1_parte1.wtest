@@ -16,18 +16,18 @@ describe "Control de Malezas"{
 	}
 	
 	test "Al emprolijarlo con un nivel de prolijidad alto, queda sin malezas" {
-		// TODO cambiar el assert fail que hace fallar el test por una definición adecuada para probar esta funcionalidad,
-		// agregando lo necesario en el archivo tp1.wlk para cumplir con lo pedido
-		assert.fail("Falta implementar")
+		jardin.malezas(10)
+		jardin.emprolijar(11)
+		assert.equals(0, jardin.malezas())
 	}
 	test "Al emprolijarlo con un nivel de prolijidad intermedio, las malezas bajan a la mitad" {
-		// TODO cambiar el assert fail que hace fallar el test por una definición adecuada para probar esta funcionalidad,
-		// agregando lo necesario en el archivo tp1.wlk para cumplir con lo pedido
-		assert.fail("Falta implementar")
+		jardin.malezas(10)
+		jardin.emprolijar(6)
+		assert.equals(5, jardin.malezas())
 	}
 	test "Al emprolijarlo con un nivel de prolijidad bajo, no se reducen las malezas" {
-		// TODO cambiar el assert fail que hace fallar el test por una definición adecuada para probar esta funcionalidad,
-		// agregando lo necesario en el archivo tp1.wlk para cumplir con lo pedido
-		assert.fail("Falta implementar")
+		jardin.malezas(10)
+		jardin.emprolijar(2)
+		assert.equals(10, jardin.malezas())
 	}
 }

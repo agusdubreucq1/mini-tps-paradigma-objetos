@@ -12,8 +12,7 @@ object juegoTP1 {
 	}
 	
 	method configurarEventosAutomaticos() {
-		// TODO Hacer que cada 5000 milisegundos crezcan malezas en el jardín
-		
+		game.onTick(5000, "crecer malezas", {jardin.crecerMalezas()})
 	}
 	
 	method configurarVentana() {

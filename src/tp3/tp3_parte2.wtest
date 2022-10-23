@@ -1,0 +1,148 @@
+import tp3.*
+
+describe "Cruza de perros en el criadero" {
+	
+	method crearMacho(velocidad, fuerza) = new Perro(velocidad = velocidad, fuerza = fuerza, esHembra = false, adulto = true)
+	method crearHembra(velocidad, fuerza) = new Perro(velocidad = velocidad, fuerza = fuerza, esHembra = true, adulto = true)
+	method crearHembraJoven(velocidad, fuerza) = new Perro(velocidad = velocidad, fuerza = fuerza, esHembra = true, adulto = false)
+	
+	test "Un criadero que no tiene perros no puede cruzar un perro adulto" {
+		const criadero = new Criadero(perros = #{}) 
+		assert.throwsExceptionWithType(new NecesitaMasPerrosException(), 
+			{criadero.cruzar(cruzaPareja, self.crearMacho(4, 6))}
+		)
+	}
+	test "Un criadero que sólo tiene machos no puede cruzar un macho adulto" {
+		const criadero = new Criadero(perros = #{self.crearMacho(5, 6), self.crearMacho(4, 7)}) 
+		assert.throwsExceptionWithType(new NecesitaMasPerrosException(), 
+			{criadero.cruzar(cruzaPareja, self.crearMacho(4, 6))}
+		)
+	}
+	test "Un criadero que sólo tiene hembras no puede cruzar una hembra adulta" {
+		const criadero = new Criadero(perros = #{self.crearHembra(5, 6), self.crearHembra(4, 7)}) 
+		assert.throwsExceptionWithType(new NecesitaMasPerrosException(), 
+			{criadero.cruzar(cruzaPareja, self.crearHembra(4, 6))}
+		)
+	}
+	
+	test "Un criadero que sólo tiene hembras jóvenes no puede cruzar un macho adulto" {
+		const criadero = new Criadero(perros = #{self.crearMacho(5, 6), self.crearHembraJoven(1,1)}) 
+		assert.throwsExceptionWithType(new NecesitaMasPerrosException(), 
+			{criadero.cruzar(cruzaPareja, self.crearMacho(4, 6))}
+		)
+	}
+	test "Un criadero que tiene machos adultos no puede cruzar una hembra joven" {
+		const criadero = new Criadero(perros = #{self.crearMacho(5, 6)}) 
+		assert.throwsExceptionWithType(new NecesitaMasPerrosException(), 
+			{criadero.cruzar(cruzaPareja, self.crearHembraJoven(1,1))}
+		)
+	}
+	
+	test "El criadero elige la pareja a cruzar en base a su status, sin considerar perros jóvenes o del mismo sexo" {
+		const hembraDebilConAltoStatus = self.crearHembra(20,1)
+		const machoACruzar = self.crearMacho(8, 6)
+		
+		const criadero = new Criadero(perros = #{self.crearHembraJoven(22,5), self.crearMacho(25, 5), self.crearMacho(15, 15), 
+			self.crearHembra(4,3),hembraDebilConAltoStatus, self.crearHembra(6,10)})
+		
+		const cria = criadero.cruzar(cruzaPareja, machoACruzar)
+		
+		assert.equals(28/2, cria.velocidad())
+	}
+	
+	test "Si un criadero no logra cruzar un perro con una potencial pareja, puede seguir probando con otras" {
+		const hembraDebilConAltoStatus = self.crearHembra(20,1)
+		const hembraFuerteConBajoStatus = self.crearHembra(5,8)
+		const machoACruzar = self.crearMacho(8, 6)
+		
+		const criadero = new Criadero(perros = #{hembraDebilConAltoStatus, hembraFuerteConBajoStatus})
+		
+		const cria = criadero.cruzar(hembraDominante, machoACruzar)
+		
+		const velocidadEsperada = machoACruzar.velocidad() * 0.05 + hembraFuerteConBajoStatus.velocidad()
+		assert.equals(velocidadEsperada, cria.velocidad())
+	}
+	
+	test "Si un criadero falla más de 3 veces tratando de cruzar un perro, no puede seguir probando" {
+		const hembraFuerteConBajoStatus = self.crearHembra(5,8)
+		const machoACruzar = self.crearMacho(8, 6)
+		
+		const hembrasDebilesConAltoStatus = (1..5).map {x => self.crearHembra(20, x)}
+		const criadero = new Criadero(perros = #{hembraFuerteConBajoStatus} + hembrasDebilesConAltoStatus)
+		
+		assert.throwsExceptionWithType(new IntentosDeCruzaAgotadosException(), 
+			{criadero.cruzar(hembraDominante, machoACruzar)}
+		)
+	}
+	
+	test "Si un criadero falla menos de 3 veces tratando de cruzar un perro, pero no tiene más parejas posibles, la cruza falla" {
+		const hembraDebil = self.crearHembra(5,4)
+		const machoACruzar = self.crearMacho(8, 6)
+		
+		const criadero = new Criadero(perros = #{hembraDebil})
+		
+		assert.throwsExceptionWithType(new NecesitaMasPerrosException(), 
+			{criadero.cruzar(hembraDominante, machoACruzar)}
+		)
+	}
+	
+	test "Si el perro que se intenta cruzar no es adulto, el criadero no podrá cruzarlo exitosamente" {
+		const hembraIncruzable = self.crearHembraJoven(5,8)
+		
+		const perros = (1..5).map {x => self.crearMacho(x, x)}
+		const criadero = new Criadero(perros = perros)
+		
+		assert.throwsExceptionWithType(new NecesitaMasPerrosException(), 
+			{criadero.cruzar(cruzaPareja, hembraIncruzable)}
+		)
+	}
+
+	test "Si más de 3 criaderos fallan una vez con el mismo estilo de cruza, el 4to no se ve afectado por los fallos de los demás" {
+		const hembraDebilConAltoStatus = self.crearHembra(20,1)
+		const hembraFuerteConBajoStatus = self.crearHembra(5,8)
+		const machoACruzar = self.crearMacho(8, 6)
+		
+		const criaderosPrevios = (1..3).map {n=> new Criadero(perros = #{hembraDebilConAltoStatus})}
+		const criadero = new Criadero(perros = #{hembraDebilConAltoStatus, hembraFuerteConBajoStatus})
+		
+		criaderosPrevios.forEach {criaderoPrevio => 
+					assert.throwsExceptionWithType(new NecesitaMasPerrosException(), 
+							{criaderoPrevio.cruzar(hembraDominante, machoACruzar)}
+					)
+		}
+		
+		assert.doesNotThrowException { criadero.cruzar(hembraDominante, machoACruzar) }
+	}
+	test "Si un mismo criadero falla en 3 oportunidades separadas, la 4ta no se ve afectada por las cruzas fallidas previas" {
+		const hembraDebilConAltoStatus = self.crearHembra(20,1)
+		const hembraFuerteConBajoStatus = self.crearHembra(5,8)
+		const machoACruzar = self.crearMacho(8, 6)
+		const machoIncruzable = self.crearMacho(30, 30)
+		
+		const criadero = new Criadero(perros = #{hembraDebilConAltoStatus, hembraFuerteConBajoStatus})
+		
+		(1..3).forEach {n => 
+					assert.throwsExceptionWithType(new NecesitaMasPerrosException(), 
+							{criadero.cruzar(hembraDominante, machoIncruzable)}
+					)
+		}
+		
+		assert.doesNotThrowException { criadero.cruzar(hembraDominante, machoACruzar) }
+	}
+	test "Si la cruza falla por un error inesperado, no se considera como un intento fallido normal" {
+		const hembras = (1..5).map {x => self.crearHembra(20, x)}
+		const machoACruzar = self.crearMacho(8, 6)
+		
+		const estiloDeCruzaQueSeRompeInesperadamente = object { 
+			method cruzar(perroACruzar, pareja) {
+				throw new DomainException(message = "Oops!")
+			}
+		}
+		
+		const criadero = new Criadero(perros = hembras)
+		
+		assert.throwsExceptionLike( new DomainException(message = "Oops!") , 
+			{criadero.cruzar(estiloDeCruzaQueSeRompeInesperadamente, machoACruzar)}
+		)
+	}
+}

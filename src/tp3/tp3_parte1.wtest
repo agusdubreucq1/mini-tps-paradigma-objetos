@@ -1,0 +1,97 @@
+import tp3.*
+
+describe "Estilos de cruza" {
+	const machoAdulto = new Perro(esHembra = false, velocidad = 5, fuerza = 5, adulto = true)
+	const hembraAdulta = new Perro(esHembra = true, velocidad = 3, fuerza = 7, adulto = true)
+	
+	// Métodos auxiliares para facilitar las pruebas
+	method esPerroJovenConStats(cria, velocidadEsperada, fuerzaEsperada) {
+		assert.equals(velocidadEsperada, cria.velocidad())
+		assert.equals(fuerzaEsperada, cria.fuerza())
+		assert.notThat(cria.adulto())
+	}
+	
+	method paraTodoEstiloDeCruzaSeVerificaQue(bloqueConAsercion) {
+		#{cruzaPareja, hembraDominante, underdog}.forEach(bloqueConAsercion)
+	}
+	
+	///////////////////////////////////
+	// Casos de cruzas exitosas
+	///////////////////////////////////
+	
+	test "La cruza pareja de perros adultos resulta en un perro con stats repartidos de sus padres" {
+		const cria = cruzaPareja.cruzar(machoAdulto, hembraAdulta)
+		
+		const velocidadEsperada = machoAdulto.velocidad()/2 + hembraAdulta.velocidad() /2
+		const fuerzaEsperada = machoAdulto.fuerza()/2 + hembraAdulta.fuerza() /2
+		self.esPerroJovenConStats(cria, velocidadEsperada, fuerzaEsperada)
+	}
+	
+	test "La cruza underdog de perros adultos resulta en un perro con stats derivados de los stats más bajos de los padres" {
+		const menorFuerza = 4
+		const menorVelocidad = 5
+		
+		machoAdulto.velocidad(menorVelocidad)
+		hembraAdulta.velocidad(menorVelocidad + 1)
+		
+		machoAdulto.fuerza(menorFuerza + 2)
+		hembraAdulta.fuerza(menorFuerza)
+		
+		const cria = underdog.cruzar(machoAdulto, hembraAdulta)
+		
+		const velocidadEsperada = menorVelocidad * 2
+		const fuerzaEsperada = menorFuerza * 2
+		self.esPerroJovenConStats(cria, velocidadEsperada, fuerzaEsperada)
+	}
+	
+	test "La cruza basada en hembra dominante de perros adultos con hembra fuerte es exitosa y la cría tiene stats derivados mayormente de la madre" {
+		const hembraFuerte = new Perro(esHembra = true, velocidad = 6, fuerza = 10, adulto = true)
+
+		const cria = hembraDominante.cruzar(hembraFuerte, machoAdulto)
+		
+		const velocidadEsperada = machoAdulto.velocidad() * 0.05 + hembraFuerte.velocidad()
+		const fuerzaEsperada = machoAdulto.fuerza() * 0.05 + hembraFuerte.fuerza()
+		self.esPerroJovenConStats(cria, velocidadEsperada, fuerzaEsperada)
+	}
+	
+	///////////////////////////////////
+	// Casos de cruzas problemáticas
+	///////////////////////////////////
+	
+	test "La cruza basada en hembra dominante de perros adultos con hembra débil no es exitosa" {
+		const hembraDebil = new Perro(esHembra = true, velocidad = 6, fuerza = 1, adulto = true)
+
+		// TODO Validar que la cruza no es exitosa con el estilo hembraDominante
+		// si se cruzan hembraDebil con machoAdulto
+		assert.fail("Falta terminar test")
+	}
+	
+	test "La cruza de dos machos no es exitosa para cualquier estilo de cruza" {
+		const perroAdultoDelMismoSexo = new Perro(esHembra = false, velocidad = 6, fuerza = 1, adulto = true)
+
+		self.paraTodoEstiloDeCruzaSeVerificaQue {estiloDeCruza =>
+			// TODO Validar que la cruza no es exitosa con cada estilo posible
+			// si se cruzan machoAdulto con perroAdultoDelMismoSexo
+			assert.fail("Falta terminar test")
+		}
+	}
+	test "La cruza de dos hembras no es exitosa para cualquier estilo de cruza" {
+		const perroAdultoDelMismoSexo = new Perro(esHembra = true, velocidad = 6, fuerza = 1, adulto = true)
+
+		self.paraTodoEstiloDeCruzaSeVerificaQue {estiloDeCruza =>
+			// TODO Validar que la cruza no es exitosa con cada estilo posible
+			// si se cruzan hembraAdulta con perroAdultoDelMismoSexo
+			assert.fail("Falta terminar test")
+		}
+	}
+	test "La cruza de dos perros no es exitosa si alguno no es adulto para cualquier estilo de cruza" {
+		const machoJoven = new Perro(esHembra = false, velocidad = 6, fuerza = 1, adulto = false)
+
+		self.paraTodoEstiloDeCruzaSeVerificaQue {estiloDeCruza =>
+			// TODO Validar que la cruza no es exitosa con cada estilo posible
+			// si se cruzan hembraAdulta con machoJoven
+			assert.fail("Falta terminar test")
+		}
+	}
+	
+}

@@ -1,18 +1,20 @@
 // TODO: Modificá las definiciones de los distintos estilos de cruza y al criadero como consideres apropiado
-object cruzaPareja inherits estilosDeCruza{
+object cruzaPareja inherits EstilosDeCruza{
 	method cruzar(perro1, perro2) {
+		self.compatibles(perro1, perro2)
 		const velocidadNueva= (perro1.velocidad() + perro2.velocidad()).div(2)
 		const fuerzaNueva = (perro1.fuerza() + perro2.fuerza()).div(2)
 		return new Perro(velocidad = velocidadNueva, fuerza = fuerzaNueva)
 	}
 }
 
-object hembraDominante inherits estilosDeCruza {
+object hembraDominante inherits EstilosDeCruza {
 	method cruzar(perro1, perro2) {
-		const velocidadNew = hembra(perro1,perro2).velocidad() +
-							macho(perro1, perro2).velocidad()
-		const fuerzaNew = hembra(perro1,perro2).fuerza() +
-							macho(perro1, perro2).fuerza()
+		self.compatibles(perro1, perro2)
+		const velocidadNew = self.hembra(perro1,perro2).velocidad() +
+							(self.macho(perro1, perro2).velocidad())*0.05
+		const fuerzaNew = self.hembra(perro1,perro2).fuerza() +
+							(self.macho(perro1, perro2).fuerza())*0.05
 		
 		return new Perro(velocidad = velocidadNew, fuerza = fuerzaNew)
 	}
@@ -30,23 +32,30 @@ object hembraDominante inherits estilosDeCruza {
 	}
 	
 	override method compatibles(perro1, perro2){
-		return super(perro1,perro2) &&
-		macho(perro1,perro2).fuerza() < hembra(perro1,perro2).fuerza()
+		super(perro1,perro2)
+		if(self.macho(perro1,perro2).fuerza() > self.hembra(perro1,perro2).fuerza()){
+			throw new DomainException(message="no son compatibles")
+		}
+		
 	}
 }
 
-object underdog inherits estilosDeCruza {
+object underdog inherits EstilosDeCruza {
 	method cruzar(perro1, perro2) {
+		self.compatibles(perro1, perro2)
 		const velocidadNew= (perro1.velocidad().min(perro2.velocidad()))*2
-		const fuerzaNew = (perro1.velocidad().min(perro2.velocidad()))*2
+		const fuerzaNew = (perro1.fuerza().min(perro2.fuerza()))*2
 		return new Perro(velocidad = velocidadNew, fuerza = fuerzaNew)
 	}
 }
 
-class estilosDeCruza {
+class EstilosDeCruza {
 	method compatibles(perro1, perro2){
-		return perro1.esHembra() != perro2.esHembra()
+		if(!perro1.tienenSexosDistintos(perro2) || !perro1.adulto() || !perro2.adulto()){
+			throw new DomainException(message="no son compatibles!")
+		}
 	}
+	
 }
 
 class Criadero {

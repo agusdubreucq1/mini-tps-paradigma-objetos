@@ -11,6 +11,7 @@ object cruzaPareja inherits EstilosDeCruza{
 object hembraDominante inherits EstilosDeCruza {
 	method cruzar(perro1, perro2) {
 		self.compatibles(perro1, perro2)
+		self.hembraMasFuerte(perro1, perro2)
 		const velocidadNew = self.hembra(perro1,perro2).velocidad() +
 							(self.macho(perro1, perro2).velocidad())*0.05
 		const fuerzaNew = self.hembra(perro1,perro2).fuerza() +
@@ -31,10 +32,9 @@ object hembraDominante inherits EstilosDeCruza {
 		}else return perro1
 	}
 	
-	override method compatibles(perro1, perro2){
-		super(perro1,perro2)
+	method hembraMasFuerte(perro1, perro2){
 		if(self.macho(perro1,perro2).fuerza() > self.hembra(perro1,perro2).fuerza()){
-			throw new DomainException(message="no son compatibles")
+			throw new DomainException(message="el macho es mas fuerte que la hembra")
 		}
 		
 	}
@@ -61,8 +61,17 @@ class EstilosDeCruza {
 class Criadero {
 	const property perros
 	method cruzar(estiloDeCruza, perroACruzar) {
-		// TODO FALTA IMPLEMENTAR
+		const parejasOrdenadas=self.ordenarPorStatus(self.potencialesParejas(estiloDeCruza, perroACruzar))
+		estiloDeCruza.cruzar(parejasOrdenadas.get(0), perroACruzar)
 		return new Perro(velocidad = 0, fuerza = 0)
+	}
+	
+	method potencialesParejas(estiloDeCruza, perroACruzar){
+		return perros.filter({perro => estiloDeCruza.compatibles(perro, perroACruzar)})
+	}
+	
+	method ordenarPorStatus(potencialesParejas){
+		return perros.sortedBy({x, y => x.status() > y.status()})
 	}
 }
 

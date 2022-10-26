@@ -55,15 +55,13 @@ class EstilosDeCruza {
 			throw new DomainException(message="no son compatibles!")
 		}
 	}
-	
 }
 
 class Criadero {
 	const property perros
 	method cruzar(estiloDeCruza, perroACruzar) {
 		const parejasOrdenadas=self.ordenarPorStatus(self.potencialesParejas(estiloDeCruza, perroACruzar))
-		estiloDeCruza.cruzar(parejasOrdenadas.get(0), perroACruzar)
-		return new Perro(velocidad = 0, fuerza = 0)
+		return self.realizar3Intentos(estiloDeCruza, parejasOrdenadas, perroACruzar)
 	}
 	
 	method potencialesParejas(estiloDeCruza, perroACruzar){
@@ -73,6 +71,36 @@ class Criadero {
 	method ordenarPorStatus(potencialesParejas){
 		return perros.sortedBy({x, y => x.status() > y.status()})
 	}
+	
+	method realizar3Intentos(estiloDeCruza, parejasOrdenadas, perroACruzar){
+		try {self.faltaDePerros(parejasOrdenadas) 
+			const cria=estiloDeCruza.cruzar(parejasOrdenadas.get(0), perroACruzar)}
+		
+		catch e: DomainException{
+			parejasOrdenadas.remove(parejasOrdenadas.get(0))
+			try{self.faltaDePerros(parejasOrdenadas) 
+				const cria=estiloDeCruza.cruzar(parejasOrdenadas.get(0), perroACruzar)}
+			
+			
+			catch e: DomainException{
+				parejasOrdenadas.remove(parejasOrdenadas.get(0))
+				try{self.faltaDePerros(parejasOrdenadas) 
+					const cria=estiloDeCruza.cruzar(parejasOrdenadas.get(0), perroACruzar)}
+				
+				catch e:DomainException{
+					throw new IntentosDeCruzaAgotadosException(message="intentos agotados")
+				}
+			}
+		}
+		return cria
+	}
+	
+	method faltaDePerros(parejas){
+		if(parejas.isEmpty()){
+			throw new NecesitaMasPerrosException(message="necesita mas perros")
+		}
+	}
+	
 }
 
 ////////////////////

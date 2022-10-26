@@ -21,7 +21,7 @@ object jardin {
 		if(nivel>=10){
 			malezas=0
 		}else if(nivel >3 && nivel <9){
-			malezas=malezas/2
+			malezas=malezas.div(2)
 		}
 	}
 }
@@ -62,7 +62,7 @@ object olivia {
 	}
 	
 	method recibirBanio(minutos){
-		relax = relax + minutos/5
+		relax = relax + minutos.div(5)
 	}
 }
 
@@ -90,12 +90,16 @@ object adriano {
 	}
 	
 	method recibirMasajes(){
-		contracturas = 0.max(contracturas - 5)
+		self.descontracturar(5)
 	}
 	
 	method recibirBanio(minutos){
 		if(self.lastimado()){
-			contracturas = 0.max(contracturas -2)
+			self.descontracturar(2)
 		}
+	}
+	
+	method descontracturar(valor){
+		contracturas = 0.max(contracturas - valor)
 	}
 }

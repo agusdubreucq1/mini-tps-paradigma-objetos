@@ -13,20 +13,24 @@ object fabrica {
 	 * self.fechaPublicacion() como fecha de publicación del mismo
 	 */ 
 	method crearPublicacionPublica() {
-		self.error("Falta implementar")
-		return "cambiame por el objeto que corresponda"
+		const publicacionPublica = 
+			new Publicacion(usuario=creador, fecha=self.fechaPublicacion(), privacidad=publica)
+		return publicacionPublica
 	}
 	method crearPublicacionPrivada() {
-		self.error("Falta implementar")
-		return "cambiame por el objeto que corresponda"
+		const publicacionPrivada = 
+			new Publicacion(usuario=creador, fecha=self.fechaPublicacion(), privacidad=privada)
+		return publicacionPrivada
 	}
 	method crearHistoriaPublica() {
-		self.error("Falta implementar")
-		return "cambiame por el objeto que corresponda"
+		const historiaPublica = 
+			new Historia(usuario=creador, fecha=self.fechaPublicacion(), privacidad=publica)
+		return historiaPublica
 	}
 	method crearHistoriaPrivada() {
-		self.error("Falta implementar")
-		return "cambiame por el objeto que corresponda"
+		const historiaPrivada = 
+			new Historia(usuario=creador, fecha=self.fechaPublicacion(), privacidad=privada)
+		return historiaPrivada
 	}
 	method crearPublicacionSecreta(usuariosRestringidos) {
 		self.error("Falta implementar")

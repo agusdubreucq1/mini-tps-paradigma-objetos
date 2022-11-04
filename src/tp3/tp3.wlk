@@ -3,7 +3,7 @@ object cruzaPareja inherits EstilosDeCruza {
 	
 	method cruzar(perro1, perro2) {
 		if(!self.cumpleRequisitos(perro1, perro2))
-		self.error("cruza no exitosa")
+			throw new CruzaFallida(message="cruza fallida")
 		
 		const velocidadNueva= (perro1.velocidad() + perro2.velocidad()).div(2)
 		const fuerzaNueva = (perro1.fuerza() + perro2.fuerza()).div(2)
@@ -68,12 +68,8 @@ class EstilosDeCruza {
 class Criadero {
 	const property perros
 	method cruzar(estiloDeCruza, perroACruzar) {
-		try{
 		const parejasCompatiblesOrdenadas = self.ordenarPorStatus(self.potencialesParejas(estiloDeCruza, perroACruzar)).take(3)
-		return self.realizarIntentos(estiloDeCruza, parejasCompatiblesOrdenadas, perroACruzar)}
-		catch e: MessageNotUnderstoodException {
-			throw new DomainException(message="Oops!")
-		}
+		return self.realizarIntentos(estiloDeCruza, parejasCompatiblesOrdenadas, perroACruzar)
 	}
 	
 	method potencialesParejas(estiloDeCruza, perroACruzar){
@@ -113,6 +109,7 @@ class Criadero {
 
 class IntentosDeCruzaAgotadosException inherits DomainException {}
 class NecesitaMasPerrosException inherits DomainException {}
+class CruzaFallida inherits DomainException {}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 

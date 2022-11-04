@@ -11,6 +11,9 @@ class Publicacion {
 	method cambiarPrivacidad(nuevaPrivacidad){
 		privacidad = nuevaPrivacidad
 	}
+	
+	method esCreador(unUsuario) = 
+		usuario == unUsuario
 
 }
 
@@ -18,6 +21,7 @@ class Historia inherits Publicacion {
 	const duracion = 1
 	override method esVisible(user, unaFecha) =
 		super(user, unaFecha) && self.dentroDeFecha(unaFecha)
+		//problema cuando es el creador, no hace falta q es dentroDeFecha
 	
 	
 	method dentroDeFecha(unaFecha)=
@@ -25,9 +29,8 @@ class Historia inherits Publicacion {
 	
 }
 
-object privada inherits Privacidad{
-	override method tienePermiso(usuario, publicacion)=
-		super(usuario, publicacion) ||
+object privada{
+	method tienePermiso(usuario, publicacion)=
 		publicacion.usuario().tieneContacto(usuario)
 		
 }
@@ -36,10 +39,3 @@ object publica{
 	method tienePermiso(usuario, publicacion) = true
 }
 
-class Privacidad{
-	method esCreador(unUsuario, publicacion) = 
-		publicacion.usuario() == unUsuario
-		
-	method tienePermiso(usuario, publicacion) = 
-		self.esCreador(usuario, publicacion)
-}

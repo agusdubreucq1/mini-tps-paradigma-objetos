@@ -4,6 +4,7 @@ class Publicacion {
 	const property usuario
 	const property fecha
 	var property privacidad
+	var property contactosRestringidos = #{}
 	
 	method esVisible(user, unaFecha)=
 		self.esCreador(user) || (privacidad.tienePermiso(user, self) && unaFecha >= fecha)
@@ -37,5 +38,10 @@ object privada{
 
 object publica{
 	method tienePermiso(usuario, publicacion) = true
+}
+
+object secreto{
+	method tienePermiso(usuario, publicacion) = 
+		publicacion.usuario().tieneContacto(usuario) &&  not publicacion.contactosRestringidos().contains(usuario)
 }
 

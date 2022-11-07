@@ -80,9 +80,8 @@ describe "Cambios en la configuración: contenido secreto" {
 	test "Una historia pública puede cambiarse a secreta y comportarse como tal" {
 		const contenido = fabrica.crearHistoriaPublica()
 		
-		// TODO hacer que la historia referenciada por
-		// la constante contenido se configure como secreta
-		// basada en usuariosRestringidos
+		contenido.privacidad(secreto)
+		contenido.contactosRestringidos(usuariosRestringidos)
 		
 		assert.that(validacionDeContenido.seComportaComo(contenido, fabrica.crearHistoriaSecreta(usuariosRestringidos), 
 			fabrica.usuariosDePrueba(), fabrica.diaSiguienteAPublicacion()
@@ -95,9 +94,8 @@ describe "Cambios en la configuración: contenido secreto" {
 	test "Una publicación privada puede cambiarse a secreta y comportarse como tal" {
 		const contenido = fabrica.crearPublicacionPrivada()	
 			
-		// TODO hacer que la publicación referenciada por
-		// la constante contenido se configure como secreta
-		// basada en usuariosRestringidos
+		contenido.privacidad(secreto)
+		contenido.contactosRestringidos(usuariosRestringidos)
 		
 		assert.that(validacionDeContenido.seComportaComo(contenido, fabrica.crearPublicacionSecreta(usuariosRestringidos), 
 			fabrica.usuariosDePrueba(), fabrica.fechaLejanaAPublicacion()
@@ -107,8 +105,7 @@ describe "Cambios en la configuración: contenido secreto" {
 	test "Una historia secreta puede cambiarse a privada y comportarse como tal" {
 		const contenido = fabrica.crearHistoriaSecreta(usuariosRestringidos)
 		
-		// TODO hacer que la historia referenciada por
-		// la constante contenido se configure como privada
+		contenido.privacidad(privada)
 		
 		assert.that(validacionDeContenido.seComportaComo(contenido, fabrica.crearHistoriaPrivada(), 
 			fabrica.usuariosDePrueba(), fabrica.diaSiguienteAPublicacion()
@@ -120,8 +117,7 @@ describe "Cambios en la configuración: contenido secreto" {
 	test "Una publicación secreta puede cambiarse a pública y comportarse como tal" {
 		const contenido = fabrica.crearPublicacionSecreta(usuariosRestringidos)
 		
-		// TODO hacer que la publicación referenciada por
-		// la constante contenido se configure como pública
+		contenido.privacidad(publica)
 		
 		assert.that(validacionDeContenido.seComportaComo(contenido, fabrica.crearPublicacionPublica(), 
 			fabrica.usuariosDePrueba(), fabrica.fechaLejanaAPublicacion()

@@ -33,12 +33,17 @@ object fabrica {
 		return historiaPrivada
 	}
 	method crearPublicacionSecreta(usuariosRestringidos) {
-		self.error("Falta implementar")
-		return "cambiame por el objeto que corresponda"
+		const publicacionSecreta =
+			new Publicacion(usuario=creador, fecha=self.fechaPublicacion(), privacidad=secreto,
+				contactosRestringidos = usuariosRestringidos)
+		return publicacionSecreta
+
 	}
 	method crearHistoriaSecreta(usuariosRestringidos) {
-		self.error("Falta implementar")
-		return "cambiame por el objeto que corresponda"
+		const historiaSecreta =
+			new Historia(usuario=creador, fecha=self.fechaPublicacion(), privacidad=secreto,
+				contactosRestringidos = usuariosRestringidos)
+		return historiaSecreta
 	}
 	
 	// Otros métodos convenientes que se usan desde las pruebas

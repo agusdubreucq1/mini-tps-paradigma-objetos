@@ -26,8 +26,7 @@ describe "Cambios en la configuración: público / privado" {
 	test "Una publicación pública puede volverse privada y comportarse como tal" {
 		const contenido = fabrica.crearPublicacionPublica()
 		
-		// TODO hacer que la publicación referenciada por
-		// la constante contenido se vuelva privada aquí
+		contenido.privacidad(privada)
 		
 		assert.that(validacionDeContenido.seComportaComo(contenido, fabrica.crearPublicacionPrivada(), 
 			fabrica.usuariosDePrueba(), fabrica.fechaLejanaAPublicacion()
@@ -37,8 +36,7 @@ describe "Cambios en la configuración: público / privado" {
 	test "Una historia pública puede volverse privada y comportarse como tal" {
 		const contenido = fabrica.crearHistoriaPublica()
 		
-		// TODO hacer que la historia referenciada por
-		// la constante contenido se vuelva privada aquí
+		contenido.privacidad(privada)
 		
 		assert.that(validacionDeContenido.seComportaComo(contenido, fabrica.crearHistoriaPrivada(), 
 			fabrica.usuariosDePrueba(), fabrica.diaSiguienteAPublicacion()
@@ -51,8 +49,7 @@ describe "Cambios en la configuración: público / privado" {
 	test "Una publicación privada puede volverse pública y comportarse como tal" {
 		const contenido = fabrica.crearPublicacionPrivada()
 		
-		// TODO hacer que la publicación referenciada por
-		// la constante contenido se vuelva pública aquí
+		contenido.privacidad(publica)
 		
 		assert.that(validacionDeContenido.seComportaComo(contenido, fabrica.crearPublicacionPublica(), 
 			fabrica.usuariosDePrueba(), fabrica.fechaLejanaAPublicacion()
@@ -62,8 +59,7 @@ describe "Cambios en la configuración: público / privado" {
 	test "Una historia privada puede volverse pública y comportarse como tal" {
 		const contenido = fabrica.crearHistoriaPrivada()
 		
-		// TODO hacer que la historia referenciada por
-		// la constante contenido se vuelva pública aquí
+		contenido.privacidad(publica)
 		
 		assert.that(validacionDeContenido.seComportaComo(contenido, fabrica.crearHistoriaPublica(), 
 			fabrica.usuariosDePrueba(), fabrica.diaSiguienteAPublicacion()

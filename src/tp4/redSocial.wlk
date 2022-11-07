@@ -6,7 +6,7 @@ class Publicacion {
 	var property privacidad
 	
 	method esVisible(user, unaFecha)=
-		privacidad.tienePermiso(user, self) && unaFecha >= fecha
+		self.esCreador(user) || (privacidad.tienePermiso(user, self) && unaFecha >= fecha)
 	
 	method cambiarPrivacidad(nuevaPrivacidad){
 		privacidad = nuevaPrivacidad
@@ -20,8 +20,8 @@ class Publicacion {
 class Historia inherits Publicacion {
 	const duracion = 1
 	override method esVisible(user, unaFecha) =
-		super(user, unaFecha) && self.dentroDeFecha(unaFecha)
-		//problema cuando es el creador, no hace falta q es dentroDeFecha
+		self.esCreador(user) || (super(user, unaFecha) && self.dentroDeFecha(unaFecha))
+		//repito un poco la logica
 	
 	
 	method dentroDeFecha(unaFecha)=

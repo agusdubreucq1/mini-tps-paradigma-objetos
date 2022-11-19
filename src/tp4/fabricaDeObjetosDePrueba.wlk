@@ -33,16 +33,17 @@ object fabrica {
 		return historiaPrivada
 	}
 	method crearPublicacionSecreta(usuariosRestringidos) {
+		secreto.contactosRestringidos(usuariosRestringidos)
 		const publicacionSecreta =
-			new Publicacion(usuario=creador, fecha=self.fechaPublicacion(), privacidad=secreto,
-				contactosRestringidos = usuariosRestringidos)
+			new Publicacion(usuario=creador, fecha=self.fechaPublicacion(), privacidad=secreto)
+		
 		return publicacionSecreta
 
 	}
 	method crearHistoriaSecreta(usuariosRestringidos) {
+		secreto.contactosRestringidos(usuariosRestringidos)
 		const historiaSecreta =
-			new Historia(usuario=creador, fecha=self.fechaPublicacion(), privacidad=secreto,
-				contactosRestringidos = usuariosRestringidos)
+			new Historia(usuario=creador, fecha=self.fechaPublicacion(), privacidad=secreto)
 		return historiaSecreta
 	}
 	

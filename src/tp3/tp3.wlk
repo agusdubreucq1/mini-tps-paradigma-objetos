@@ -1,28 +1,39 @@
 // TODO: Modificá las definiciones de los distintos estilos de cruza y al criadero como consideres apropiado
-object cruzaPareja inherits EstilosDeCruza {
+class EstilosDeCruza {
+	method cumpleRequisitos(perro1, perro2)=
+		perro1.compatibles(perro1)
 	
-	method cruzar(perro1, perro2) {
+	method cruzar(perro1, perro2){
 		if(!self.cumpleRequisitos(perro1, perro2))
 			throw new CruzaFallida(message="cruza fallida")
 		
-		const velocidadNueva= (perro1.velocidad() + perro2.velocidad()).div(2)
-		const fuerzaNueva = (perro1.fuerza() + perro2.fuerza()).div(2)
+		const velocidadNueva= self.velocidadADar(perro1, perro2)
+		const fuerzaNueva = self.fuerzaADar(perro1, perro2)
 		return new Perro(velocidad = velocidadNueva, fuerza = fuerzaNueva)
 	}
+	
+	method velocidadADar(perro1, perro2)
+		
+	method fuerzaADar(perro1, perro2)
+}
+
+object cruzaPareja inherits EstilosDeCruza {
+	override method velocidadADar(perro1, perro2)=
+		(perro1.velocidad() + perro2.velocidad()).div(2)
+		
+	override method fuerzaADar(perro1, perro2)=
+		(perro1.fuerza() + perro2.fuerza()).div(2)
 }
 
 object hembraDominante inherits EstilosDeCruza {
-	method cruzar(perro1, perro2) {
-		if(!self.cumpleRequisitos(perro1, perro2))
-		self.error("cruza no exitosa")
-		
-		const velocidadNew = self.hembra(perro1,perro2).velocidad() +
-							(self.macho(perro1, perro2).velocidad())*0.05
-		const fuerzaNew = self.hembra(perro1,perro2).fuerza() +
-							(self.macho(perro1, perro2).fuerza())*0.05
-		
-		return new Perro(velocidad = velocidadNew, fuerza = fuerzaNew)
-	}
+
+	override method velocidadADar(perro1, perro2)=
+		self.hembra(perro1,perro2).velocidad() +
+		(self.macho(perro1, perro2).velocidad())*0.05
+							
+	override method fuerzaADar(perro1, perro2)=
+		self.hembra(perro1,perro2).fuerza() +
+		(self.macho(perro1, perro2).fuerza())*0.05
 	
 	method hembra(perro1, perro2){
 		if(perro1.esHembra()){
@@ -36,34 +47,22 @@ object hembraDominante inherits EstilosDeCruza {
 		}else return perro1
 	}
 	
-	override method cumpleRequisitos(perro1, perro2)= super(perro1, perro2) && self.hembraMasFuerte(perro1, perro2)
+	override method cumpleRequisitos(perro1, perro2)= super(perro1, perro2) && self.hembraEsMasFuerte(perro1, perro2)
 	
-	method hembraMasFuerte(perro1, perro2) =
+	method hembraEsMasFuerte(perro1, perro2) =
 		self.macho(perro1,perro2).fuerza() < self.hembra(perro1,perro2).fuerza()
-			
-		
 }
 
 object underdog inherits EstilosDeCruza {
-	method cruzar(perro1, perro2) {
-		if(!self.cumpleRequisitos(perro1, perro2))
-		self.error("no cumple los requisitos")
+
+	override method velocidadADar(perro1, perro2)=
+		(perro1.velocidad().min(perro2.velocidad()))*2
 		
-		const velocidadNew= (perro1.velocidad().min(perro2.velocidad()))*2
-		const fuerzaNew = (perro1.fuerza().min(perro2.fuerza()))*2
-		return new Perro(velocidad = velocidadNew, fuerza = fuerzaNew)
-	}
+	override method fuerzaADar(perro1, perro2)=
+		(perro1.fuerza().min(perro2.fuerza()))*2
 }
 
-class EstilosDeCruza {
-	method compatibles(perro1, perro2)=
-		perro1.tienenSexosDistintos(perro2) && perro1.adulto() && perro2.adulto()
-			
-	
-	method cumpleRequisitos(perro1, perro2)=
-		self.compatibles(perro1, perro2)
-	
-}
+//------------------------------------------------------------------------
 
 class Criadero {
 	const property perros
@@ -87,6 +86,7 @@ class Criadero {
 		
 		return estiloDeCruza.cruzar(parejasExitosas.get(0), perroACruzar)
 	}
+	
 	
 	
 	method faltaronPerros(parejasExitosas, parejasCompatiblesOrdenadas){
@@ -121,5 +121,7 @@ class Perro {
 
 	method status() = self.fuerza() + self.velocidad()
 	method tienenSexosDistintos(otroPerro) = otroPerro.esHembra() != self.esHembra()
+	method compatibles(otroPerro)=
+		self.tienenSexosDistintos(otroPerro) && self.adulto() && otroPerro.adulto()
 }
 

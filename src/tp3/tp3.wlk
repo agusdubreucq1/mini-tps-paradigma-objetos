@@ -1,7 +1,8 @@
 // TODO: Modificá las definiciones de los distintos estilos de cruza y al criadero como consideres apropiado
 class EstilosDeCruza {
+	
 	method cumpleRequisitos(perro1, perro2)=
-		perro1.compatibles(perro1)
+		perro1.compatibles(perro2)
 	
 	method cruzar(perro1, perro2){
 		if(!self.cumpleRequisitos(perro1, perro2))
@@ -67,36 +68,42 @@ object underdog inherits EstilosDeCruza {
 class Criadero {
 	const property perros
 	method cruzar(estiloDeCruza, perroACruzar) {
-		const parejasCompatiblesOrdenadas = self.ordenarPorStatus(self.potencialesParejas(estiloDeCruza, perroACruzar)).take(3)
-		return self.realizarIntentos(estiloDeCruza, parejasCompatiblesOrdenadas, perroACruzar)
+		const intentos = 3
+		const parejasCompatiblesOrdenadas = self.ordenarPorStatus(self.potencialesParejas(estiloDeCruza, perroACruzar)).take(intentos)
+		
+		return self.realizarIntentos(estiloDeCruza, parejasCompatiblesOrdenadas, perroACruzar, intentos)
 	}
 	
 	method potencialesParejas(estiloDeCruza, perroACruzar){
-		return (perros.filter({perro => estiloDeCruza.compatibles(perro, perroACruzar)}))
+		return (perros.filter({perro => perro.compatibles(perroACruzar)}))
 	}
 	
 	method ordenarPorStatus(potencialesParejas){
 		return potencialesParejas.sortedBy({x, y => x.status() > y.status()})
 	}
 	
-	method realizarIntentos(estiloDeCruza, parejasCompatiblesOrdenadas, perroACruzar){
-		const parejasExitosas = parejasCompatiblesOrdenadas.filter({perro => estiloDeCruza.cumpleRequisitos(perro, perroACruzar)})
-		self.faltaronPerros(parejasExitosas, parejasCompatiblesOrdenadas)
-		self.seAgotaronIntentos(parejasExitosas, parejasCompatiblesOrdenadas)
-		
-		return estiloDeCruza.cruzar(parejasExitosas.get(0), perroACruzar)
+	method realizarIntentos(estiloDeCruza, parejasCompatiblesOrdenadas, perroACruzar, cantIntentos){
+		self.faltaronPerros(parejasCompatiblesOrdenadas, cantIntentos)
+		self.seAgotaronIntentos(parejasCompatiblesOrdenadas, cantIntentos)
+		try{
+			return estiloDeCruza.cruzar(parejasCompatiblesOrdenadas.get(0), perroACruzar)
+			}
+		catch e: CruzaFallida {
+			parejasCompatiblesOrdenadas.remove(parejasCompatiblesOrdenadas.get(0))
+			return self.realizarIntentos(estiloDeCruza, parejasCompatiblesOrdenadas, perroACruzar, cantIntentos -1)
+			}
 	}
 	
 	
 	
-	method faltaronPerros(parejasExitosas, parejasCompatiblesOrdenadas){
-		if(parejasExitosas.isEmpty() && parejasCompatiblesOrdenadas.size() < 3){
+	method faltaronPerros(parejasCompatiblesOrdenadas, intentos){
+		if(parejasCompatiblesOrdenadas.isEmpty() && intentos > 0){
 			throw new NecesitaMasPerrosException(message="necesita mas perros")
 		}
 	}
 	
-	method seAgotaronIntentos(parejasExitosas, parejasCompatiblesOrdenadas){
-		if(parejasExitosas.isEmpty() && parejasCompatiblesOrdenadas.size() == 3){
+	method seAgotaronIntentos(parejasCompatiblesOrdenadas, intentos){
+		if(intentos == 0){
 			throw new IntentosDeCruzaAgotadosException(message="se agotaron los intentos")
 		}
 	}
